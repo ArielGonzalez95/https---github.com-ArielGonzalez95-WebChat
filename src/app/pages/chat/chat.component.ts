@@ -3,7 +3,7 @@ import { InjectSetupWrapper } from '@angular/core/testing';
 import { environment } from '@env/environment';
 import { USER_STORAGE_KEY } from '@shared/constants/constant';
 import { createClient } from '@supabase/supabase-js';
-import { ChatService } from '@auth/services/chat.service';
+
 import { promises } from 'dns';
 @Component({
   selector: 'app-chat',
@@ -19,7 +19,7 @@ export class ChatComponent implements OnInit {
   user = this.supabase.auth.user();
   usuarioActual:any;
   llamadaUser ="";
-  constructor(private readonly chat: ChatService) { }
+  constructor() { }
 
   ngOnInit(): void {
     this.EscucharChat(); 
