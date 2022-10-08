@@ -1,0 +1,13 @@
+<div class="row">
+
+        <div class="col-6">
+            <label>Nombre de usuario<input type="text" class="col-12" disabled="{{isEnabled}}" [(ngModel)]='NombreUsuario' value="{{NombreUsuario}}"></label>
+            <label>Localidad<input type="text" class="col-12" disabled="{{isEnabled}}" [(ngModel)]='localidad' value="{{localidad}}"></label>
+            <label>Pais<input type="text" class="col-12" disabled="{{isEnabled}}" [(ngModel)]='pais' value="{{pais}}"></label>
+        </div>
+        <div class="col-12">
+            <button class="btn btn-info col-6" ng (click)="Edit()">Editar</button>
+        <button class="btn btn-primary col-6" ng (click)="guardarCambios()">Guardar Cambios</button>
+        </div>
+
+</div>
