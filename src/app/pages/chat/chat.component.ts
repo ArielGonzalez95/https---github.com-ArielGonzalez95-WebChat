@@ -3,7 +3,8 @@ import { InjectSetupWrapper } from '@angular/core/testing';
 import { environment } from '@env/environment';
 import { USER_STORAGE_KEY } from '@shared/constants/constant';
 import { createClient } from '@supabase/supabase-js';
-
+import { ChatService } from '@auth/services/chat.service';
+import { promises } from 'dns';
 @Component({
   selector: 'app-chat',
   templateUrl: './chat.component.html',
@@ -17,11 +18,12 @@ export class ChatComponent implements OnInit {
   supabase = createClient(environment.supabase.url, environment.supabase.publicKey);
   user = this.supabase.auth.user();
   userMostrar  ="";
-  llamadaUser="";
-  constructor() { }
+  llamadaUser ="";
+  constructor(private readonly chat: ChatService) { }
 
   ngOnInit(): void {
-    this.EscucharChat();    
+    this.EscucharChat(); 
+    this.obtener();
   }
   async insertarNew(){
     const supabase = createClient(environment.supabase.url, environment.supabase.publicKey);
@@ -40,7 +42,7 @@ export class ChatComponent implements OnInit {
   .on('*', payload => {
     this.textoChat = payload.new.Comentarios;
     this.userMostrar = payload.new.user;
-    this.ArrayComentarios.push(this.userMostrar+":"+this.textoChat);
+    this.ArrayComentarios.push(this.llamadaUser+":"+this.textoChat);
   })
   .subscribe()
   const subscriptions = supabase.getSubscriptions()
@@ -51,7 +53,18 @@ export class ChatComponent implements OnInit {
 
     this.comentarios = "";
   }
+  async obtener(){
+    const supabase = createClient(environment.supabase.url, environment.supabase.publicKey);
+    const user = supabase.auth.user()
+    const usuario = user?.email;
+    let { data: datos, error } = await supabase
+  .from('datosUser')
+  .select('nombreUser')
+  .eq('usuariolog',usuario)
+  datos?.forEach((elemento, indice, array) => {
+    this.llamadaUser = elemento.nombreUser;
+  })
+}
 
- 
 }
 
