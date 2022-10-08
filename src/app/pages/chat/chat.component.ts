@@ -17,14 +17,11 @@ export class ChatComponent implements OnInit {
   supabase = createClient(environment.supabase.url, environment.supabase.publicKey);
   user = this.supabase.auth.user();
   userMostrar  ="";
+  llamadaUser="";
   constructor() { }
 
   ngOnInit(): void {
-    this.EscucharChat();
-    this.obtener();
-    console.log(this.user)
-    
-    
+    this.EscucharChat();    
   }
   async insertarNew(){
     const supabase = createClient(environment.supabase.url, environment.supabase.publicKey);
@@ -42,31 +39,19 @@ export class ChatComponent implements OnInit {
   .from('comentarios')
   .on('*', payload => {
     this.textoChat = payload.new.Comentarios;
-    this.ArrayComentarios.push(this.textoChat);
+    this.userMostrar = payload.new.user;
+    this.ArrayComentarios.push(this.userMostrar+":"+this.textoChat);
   })
   .subscribe()
   const subscriptions = supabase.getSubscriptions()
-  console.log(subscriptions)
   }
 
 
-  limpiar() {
+  limpiar(): void {
 
     this.comentarios = "";
   }
 
-  async obtener(){
-    const supabase = createClient(environment.supabase.url, environment.supabase.publicKey);
-    const user = supabase.auth.user()
-    const usuario = user?.email;
-    let { data: datos, error } = await supabase
-  .from('datosUser')
-  .select('*')
-  .eq('usuariolog',usuario)
-  datos?.forEach((elemento, indice, array) => {
-    this.userMostrar = elemento.nombreUser;
-    
-  })
-  }
+ 
 }
 
