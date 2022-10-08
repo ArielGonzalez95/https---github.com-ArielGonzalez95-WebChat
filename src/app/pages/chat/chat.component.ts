@@ -17,13 +17,13 @@ export class ChatComponent implements OnInit {
   ArrayComentarios = new Array;
   supabase = createClient(environment.supabase.url, environment.supabase.publicKey);
   user = this.supabase.auth.user();
-  userMostrar  ="";
+  usuarioActual:any;
   llamadaUser ="";
   constructor(private readonly chat: ChatService) { }
 
   ngOnInit(): void {
     this.EscucharChat(); 
-    this.obtener();
+    
   }
   async insertarNew(){
     const supabase = createClient(environment.supabase.url, environment.supabase.publicKey);
@@ -39,9 +39,10 @@ export class ChatComponent implements OnInit {
     const user = supabase.auth.user();
   const mySubscription = supabase
   .from('comentarios')
-  .on('*', payload => {
+  .on('*', async payload => {
     this.textoChat = payload.new.Comentarios;
-    this.userMostrar = payload.new.user;
+    console.log(payload)
+   await this.obtener(payload.new.user);
     this.ArrayComentarios.push(this.llamadaUser+":"+this.textoChat);
   })
   .subscribe()
@@ -53,15 +54,16 @@ export class ChatComponent implements OnInit {
 
     this.comentarios = "";
   }
-  async obtener(){
+  async obtener(userActual: string){
     const supabase = createClient(environment.supabase.url, environment.supabase.publicKey);
     const user = supabase.auth.user()
     const usuario = user?.email;
     let { data: datos, error } = await supabase
   .from('datosUser')
   .select('nombreUser')
-  .eq('usuariolog',usuario)
+  .eq('usuariolog',userActual)
   datos?.forEach((elemento, indice, array) => {
+    console.log(elemento)
     this.llamadaUser = elemento.nombreUser;
   })
 }
